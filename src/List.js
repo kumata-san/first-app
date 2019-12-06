@@ -1,14 +1,18 @@
 import React from 'react'
 import Item from './Item'
 
-const List = () => {
+const List = (props) => {
+    console.log(props.todos)
     return (
         <ol>
-            <Item />
-            <Item />
-            <Item />
-            <Item />
-            <Item />
+            {/* map関数を用いて、データを<Item />に変換する！ */}
+            {
+                props.todos.map((todo) => {
+                    return (
+                        <Item text={todo.text} />
+                    )
+                })
+            }
         </ol>        
     )
 }
