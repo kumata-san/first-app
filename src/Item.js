@@ -1,20 +1,22 @@
 import React, { useState } from 'react';
 import styled from 'styled-components'
 
-const Item = (props) => {
+// propsではなく{ id, text, deleteTodo }で代用
+const Item = ({ id, text, deleteTodo }) => {
     const [isDone, setIsDone] = useState(false)
     // stateが変更される(setIsDoneが呼び出される)と、Reactはコンポーネントを再描写する
 
-    const desc = 'サンプル'
-
     const btnStatus = isDone ? '未完了に戻す' : '完了'
-    
 
+    // 関数を関数で包まないと無限ループになる
     return (
         <ItemWrapper>
-            <p>{props.text}</p>
+            <p>{`${id}: ${text}`}</p>
             <button onClick={() => setIsDone(!isDone)}>
                 {btnStatus}
+            </button>
+            <button onClick={() => deleteTodo(id)}>
+                削除
             </button>
         </ItemWrapper>
     )

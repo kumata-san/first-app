@@ -1,19 +1,25 @@
 import React from 'react'
 import Item from './Item'
 
-const List = (props) => {
-    console.log(props.todos)
+// { todos, deleteTodos }はpropsで代用可能だよ
+const List = ({ todos, deleteTodo}) => {
     return (
-        <ol>
+        <ul>
             {/* map関数を用いて、データを<Item />に変換する！ */}
             {
-                props.todos.map((todo) => {
+                // propsを使わなければ先頭にprops.をつけなくてもおｋ
+                todos.map((todo, i) => {
                     return (
-                        <Item text={todo.text} />
+                        <Item
+                            key={i} // iを入れることで何番目かというのが自動で入ってくる
+                            id={todo.id} // todoの中にidが入っているのでこういうふうに書く
+                            text={todo.text}
+                            deleteTodo={deleteTodo}
+                        />
                     )
                 })
             }
-        </ol>        
+        </ul>
     )
 }
 
