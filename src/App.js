@@ -20,7 +20,8 @@ const App = () => {
     //         setTodos(todos)
     //     })
 
-    //上記を使うと無限ループになるから次のuseEffectを使うことにしよう！
+    // 上記を使うと無限ループになるから次のuseEffectを使うことにしよう！
+    // 表示させたときに取得
     useEffect(() => {
         axios
             .get('http://localhost:3001/todos')
@@ -29,7 +30,7 @@ const App = () => {
                 setTodos(todos)
             })
         }
-    )
+    ,[])// []ブラケットが無いと無限ループになってかなり重くなってしまう
 
     // 以下追加処理を書いていく
     const addTodo = (value) => {
@@ -59,9 +60,17 @@ const App = () => {
 
     // 消した状態のTodos→newTodosを作って全部上書きする
     // 引っ張ってきたidを使えるようにするためにidを引数に入れておく
-    const deleteTodo = (id) => {
-        const newTodos = todos.filter(todo => id !== todo.id)
-        setTodos(newTodos)
+    // const deleteTodo = (id) => {
+    //     const newTodos = todos.filter(todo => id !== todo.id)
+    //     setTodos(newTodos)
+    // }
+
+    const deleteTodo = (id) => { // axios.deleteとするのはapp.jsでdeleteを作っているから合わせる必要がある
+        // シングルクォートではなくバッククォートにするのは$マークが使えるようになるから
+        axios.delete(`http://localhost:3001/todos/${id}`)
+        .then(res => {
+            setTodos(res.data)
+        })
     }
 
     return (

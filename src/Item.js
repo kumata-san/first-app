@@ -8,6 +8,10 @@ const Item = ({ id, text, deleteTodo }) => {
 
     const btnStatus = isDone ? '未完了に戻す' : '完了'
 
+    const handleDelete = () => {
+        deleteTodo(id)
+    }
+
     // 関数を関数で包まないと無限ループになる
     return (
         <ItemWrapper>
@@ -18,6 +22,7 @@ const Item = ({ id, text, deleteTodo }) => {
             <button onClick={() => deleteTodo(id)}>
                 削除
             </button>
+            <button onClick={handleDelete}></button>
         </ItemWrapper>
     )
 }

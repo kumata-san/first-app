@@ -5,8 +5,26 @@
 // codevillage.jp → ドメイン
 // index.html → パス
 
+require('dotenv').config()
+
 const express = require('express')
 const app = express()
+
+const mongoose = require('mongoose')
+const url = process.env.MONGODB_URL
+
+// 接続処理
+mongoose.connect(url, { useNewUrlParser: true})
+
+const todoSchema = new mongoose.Schema({
+    text: String
+})
+
+// モデルの作成
+// 第一引数は名前
+const Todo = mongoose.model('Todo', todoSchema)
+
+//========================================
 
 const cors = require('cors')
 const bodyParser = require('body-parser')
@@ -17,16 +35,16 @@ app.use(cors())
 // 送られたjsonをreq.bodyで参照できるようにする
 app.use(bodyParser.json())
 
-let todos = [
-    {
-        id: 1,
-        text: '宿題する'
-    },
-    {
-        id: 2,
-        text: '洗濯する'
-    },
-]
+// let todos = [
+//     {
+//         id: 1,
+//         text: '宿題する'
+//     },
+//     {
+//         id: 2,
+//         text: '洗濯する'
+//     },
+// ]
 
 // パスと処理を受け取る
 // GET http://localhost:3001/
@@ -37,7 +55,10 @@ app.get('/', (req, res) => {
 // GET http://localhost:3001/todos
 // todosをすべて取得
 app.get('/todos', (req, res) => {
-    res.json(todos)
+    // からの{}を設定すると全部返ってくる
+    Todo.find({}).then(todos => {
+        res.json(todos)
+    })
 })
 
 // GET http://localhost:3001/todos/1
@@ -67,10 +88,17 @@ const generateId = () => {
 }
 
 app.post('/todos', (req, res) => {
-    const todo = req.body
-    todo.id = generateId()
-    todos.push(todo)
-    res.json(todos)
+    // const todo = req.body
+    // todo.id = generateId()
+    // todos.push(todo)
+    // res.json(todos)
+    const todo = new Todo({ // new Todo(ここではモデル)で保存したいオブジェクトを設定する=>saveで保存するため
+        text: req.body.text
+    })
+
+    todo.save().then(todo => {
+        res.json(todo)
+    })
 })
 
 app.delete('/todos/:id', (req, res) => {
